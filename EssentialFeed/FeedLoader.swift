@@ -12,7 +12,7 @@ enum LoadFeedResult {
     case success([FeedItem])
     case failure(Error)
 }
-
+// protocol feedloader
 protocol FeedLoader {
     
     func loadFeed(completion:@escaping([LoadFeedResult])->Void)
