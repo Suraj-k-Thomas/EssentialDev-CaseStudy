@@ -1,4 +1,4 @@
-# Essential Feed App – Image Feed Feature
+# Essential Devloper Feed App – Image Feed Feature
 
 ## BDD Specs
 
@@ -8,7 +8,7 @@
 
 > As an online customer
 I want the app to automatically load my latest image feed
-So I can always enjoy the newest images of my friends
+So I can always enjoy the newest images on my feed
 
 #### Scenarios (Acceptance criteria)
 
@@ -23,7 +23,7 @@ Then the app should display the latest feed from remote
 
 > As an offline customer
 I want the app to show the latest saved version of my image feed
-So I can always enjoy images of my friends
+So I can always see the image feed
 
 #### Scenarios (Acceptance criteria)
 
@@ -105,8 +105,8 @@ Then the app should display an error message
 | Property      | Type                |
 |---------------|---------------------|
 | `id`          | `UUID`              |
-| `description` | `String` (optional) |
-| `location`    | `String` (optional) |
+| `description`? | `String` (optional) |
+| `location`?    | `String` (optional) |
 | `imageURL`    | `URL`               |
 
 ### Payload contract
