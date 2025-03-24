@@ -3,22 +3,4 @@
    uuid = "E1A5D5EE-B550-4C64-ADB1-AC448A18B2F9"
    type = "1"
    version = "2.0">
-   <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "3DA5FF4B-D8FC-4105-A9D7-06A395F14F97"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "EssentialFeedTests/RemoteFeedLoaderTests.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "HTTPClientSpy"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-   </Breakpoints>
 </Bucket>
