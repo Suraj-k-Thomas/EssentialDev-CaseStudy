@@ -7,37 +7,12 @@
 
 import Testing
 import XCTest
-
-class RemoteFeedLoader {
-    
-    let client : HTTPClient?
-    let url : URL
-   
-    init (client : HTTPClient, url : URL){
-       
-        self.client = client
-        self.url = url
-    }
-   
-    func load (){
-        
-        client!.get(fromUrl :url)
-        
-    }
-}
-
-protocol HTTPClient {
-    
-    func get (fromUrl url: URL)
-    
-}
-
-
+@testable import EssentialFeed
 
 class RemoteFeedLoaderTests : XCTestCase {
     
     func test_init_DoesNotREqruireDataFromURL () {
-       
+        
         let url = URL(string: "https://TestUrl.com")!
         let (_,Client) = makeSUTAndCient(url: url)
         XCTAssertNil(Client.requestedUrl)
