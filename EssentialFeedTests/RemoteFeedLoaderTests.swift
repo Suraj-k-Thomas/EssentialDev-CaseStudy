@@ -56,11 +56,11 @@ class RemoteFeedLoaderTests : XCTestCase {
 }
 
 //Helpers
-func makeSUTAndCient (url:URL) -> (SUT : RemoteFeedLoader, client : HTTPClientSpy){
+func makeSUTAndCient (url:URL) -> ( RemoteFeedLoader,  HTTPClientSpy){
     
     let client = HTTPClientSpy ()
     let SUT = RemoteFeedLoader(client: client, url: url)
-    return (SUT:SUT,client:client)
+    return (SUT,client)
     
 }
 
