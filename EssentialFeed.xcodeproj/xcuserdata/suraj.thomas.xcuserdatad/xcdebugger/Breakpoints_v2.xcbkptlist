@@ -14,10 +14,10 @@
             filePath = "EssentialFeedTests/RemoteFeedLoaderTests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "get(fromUrl:)"
-            landmarkType = "7">
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "HTTPClientSpy"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
