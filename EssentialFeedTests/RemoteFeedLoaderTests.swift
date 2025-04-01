@@ -62,17 +62,19 @@ func makeSUTAndCient (url:URL = URL(string:"https://TestUrl.com" )!) -> ( Remote
 
 class HTTPClientSpy : HTTPClient {
     
-    var error:Error?
-    var requestedUrl: URL?
-    var requestedUrls: [URL] = []
-    var completions = [(Error?) -> Void]()
+    var requestedUrls: [URL] {
+        
+        messages.map{$0.url}
+    }
+    private var messages  = [(url : URL , completion: (Error?) -> Void) ]()
+    
     func get (fromUrl url: URL, completion : @escaping (Error?) -> Void) {
-        completions.append(completion)
-        requestedUrls.append(url)
+        
+        messages.append((url,completion))
     }
     
     func complete(with error : Error, at index:Int = 0){
         
-        completions[index](error)
+        messages[index].completion(error)
     }
 }
