@@ -19,7 +19,6 @@ public protocol HTTPClient {
     
 }
 
-
 public final class RemoteFeedLoader {
     
     public enum Error : Swift.Error {
