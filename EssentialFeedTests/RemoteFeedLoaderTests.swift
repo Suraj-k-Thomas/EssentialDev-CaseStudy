@@ -42,7 +42,7 @@ class RemoteFeedLoaderTests : XCTestCase {
         
         let (SUT,Client) = makeSUTAndClient()
         expect(SUT, toCompleteWith: .Connectivity) {
-            let  ClientError = NSError(domain: "TestError", code: 0, userInfo: nil)
+            let  ClientError = NSError(domain: "TestError", code: 0)
             Client.complete(with: ClientError)
         }
         
@@ -77,12 +77,12 @@ class RemoteFeedLoaderTests : XCTestCase {
 
 private func expect (_ SUT : RemoteFeedLoader , toCompleteWith error : RemoteFeedLoader.Error ,when  action: ()-> Void, file: StaticString = #filePath, line: UInt = #line){
     
-    var capturedErrors = [RemoteFeedLoader.Error]()
+    var captureResults = [RemoteFeedLoader.Result]()
     SUT.load{
-        capturedErrors.append($0!)
+        captureResults.append($0!)
     }
     action()
-    XCTAssertEqual(capturedErrors, [error])
+    XCTAssertEqual(captureResults, [.failure(error)],file: file, line: line)
     
     
 }
