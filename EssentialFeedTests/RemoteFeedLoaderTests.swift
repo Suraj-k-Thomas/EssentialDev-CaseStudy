@@ -102,19 +102,40 @@ class RemoteFeedLoaderTests : XCTestCase {
             client.complete(withStatusCode: 200, data: json)
         })
     }
-   
+    
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        
+        let client = HTTPClientSpy()
+        let url:URL = URL(string:"https://AnyUrl.com" )!
+        var SUT:RemoteFeedLoader? = RemoteFeedLoader(client: client, url: url)
+        
+        var capturedResults = [RemoteFeedLoader.Result]()
+        SUT?.load{
+            capturedResults.append($0!)
+        }
+        SUT = nil
+        
+        client.complete(withStatusCode: 200, data:makeItemsJSON([]))
+        
+        XCTAssertTrue(capturedResults.isEmpty)
+        
+    }
+    
+    
+    //Helpers
+
     func makeSUTAndClient (url:URL = URL(string:"https://TestUrl.com" )!, file: StaticString = #filePath,
-        line: UInt = #line) ->
-      (RemoteFeedLoader,  HTTPClientSpy){
+                           line: UInt = #line) ->
+    (RemoteFeedLoader,  HTTPClientSpy){
         
         let client = HTTPClientSpy ()
         let SUT = RemoteFeedLoader(client: client, url: url)
-          trackMemoryLeaks(client,file: file, line: line)
-          trackMemoryLeaks(SUT,file: file, line: line)
+        trackMemoryLeaks(client,file: file, line: line)
+        trackMemoryLeaks(SUT,file: file, line: line)
         return (SUT,client)
         
     }
-  
+    
     private func trackMemoryLeaks(
         _ anyinstance :AnyObject,
         file: StaticString = #filePath,
@@ -127,46 +148,43 @@ class RemoteFeedLoaderTests : XCTestCase {
             
             
         }
-    
-}
-
-//Helpers
-
-private func expect (_ SUT : RemoteFeedLoader , toCompleteWith result : RemoteFeedLoader.Result ,
-    when  action: ()-> Void,
-    file: StaticString = #filePath,
-    line: UInt = #line){
-    
-    var captureResults = [RemoteFeedLoader.Result]()
-    SUT.load{
-        captureResults.append($0!)
-    }
-    action()
-    XCTAssertEqual(captureResults, [result],file: file, line: line)
-    
-    
-}
-
-
-private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-    let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
-    
-    let json = [
-        "id": id.uuidString,
-        "description": description,
-        "location": location,
-        "image": imageURL.absoluteString
-    ].reduce(into: [String: Any]()) { (acc, e) in
-        if let value = e.value { acc[e.key] = value }
+        
+    private func expect (_ SUT : RemoteFeedLoader , toCompleteWith result : RemoteFeedLoader.Result ,
+                         when  action: ()-> Void,
+                         file: StaticString = #filePath,
+                         line: UInt = #line){
+        
+        var captureResults = [RemoteFeedLoader.Result]()
+        SUT.load{
+            captureResults.append($0!)
+        }
+        action()
+        XCTAssertEqual(captureResults, [result],file: file, line: line)
+        
+        
     }
     
-    return (item, json)
-}
-
-private func makeItemsJSON (_ items :[[String:Any]])->Data{
     
-    let json = ["items":items]
-    return try! JSONSerialization.data(withJSONObject: json)
+    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
+        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+        
+        let json = [
+            "id": id.uuidString,
+            "description": description,
+            "location": location,
+            "image": imageURL.absoluteString
+        ].reduce(into: [String: Any]()) { (acc, e) in
+            if let value = e.value { acc[e.key] = value }
+        }
+        
+        return (item, json)
+    }
+    
+    private func makeItemsJSON (_ items :[[String:Any]])->Data{
+        
+        let json = ["items":items]
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
 }
 
 class HTTPClientSpy : HTTPClient {
