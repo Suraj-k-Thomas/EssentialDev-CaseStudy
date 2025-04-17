@@ -9,7 +9,9 @@ import Foundation
 
 
 
-public final class RemoteFeedLoader {
+public final class RemoteFeedLoader : FeedLoader{
+    
+    
     
     private let client : HTTPClient?
     private let url : URL
@@ -21,7 +23,6 @@ public final class RemoteFeedLoader {
     }
     
     public typealias Result = LoadFeedResult<Error>
-//
     
     public  init (client : HTTPClient, url : URL){
         
@@ -29,7 +30,7 @@ public final class RemoteFeedLoader {
         self.url = url
     }
     
-    public  func load (completion : @escaping (Result?) -> Void ){
+ func loadFeed (completion : @escaping (Result) -> Void ){
         
         client!.get(fromUrl :url) { [weak self] response in
             
