@@ -23,7 +23,7 @@ class RemoteFeedLoaderTests : XCTestCase {
         let url = URL(string: "https://TestUrl.com")!
         let (SUT,Client) = makeSUTAndClient()
         
-        SUT.load{_ in}
+        SUT.loadFeed{_ in}
         XCTAssertEqual(Client.requestedUrls, [url])
         
     }
@@ -33,8 +33,8 @@ class RemoteFeedLoaderTests : XCTestCase {
         let url = URL(string: "https://TestUrl.com")!
         let (SUT,Client) = makeSUTAndClient()
         
-        SUT.load{_ in}
-        SUT.load{_ in}
+        SUT.loadFeed{_ in}
+        SUT.loadFeed{_ in}
         XCTAssertEqual(Client.requestedUrls, [url, url])
     }
     
@@ -110,8 +110,8 @@ class RemoteFeedLoaderTests : XCTestCase {
         var SUT:RemoteFeedLoader? = RemoteFeedLoader(client: client, url: url)
         
         var capturedResults = [RemoteFeedLoader.Result]()
-        SUT?.load{
-            capturedResults.append($0!)
+        SUT?.loadFeed{
+            capturedResults.append($0)
         }
         SUT = nil
         
@@ -155,8 +155,8 @@ class RemoteFeedLoaderTests : XCTestCase {
                          line: UInt = #line){
         
         var captureResults = [RemoteFeedLoader.Result]()
-        SUT.load{
-            captureResults.append($0!)
+        SUT.loadFeed{
+            captureResults.append($0)
         }
         action()
         XCTAssertEqual(captureResults, [result],file: file, line: line)
