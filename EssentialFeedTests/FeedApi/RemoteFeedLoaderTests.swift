@@ -41,7 +41,7 @@ class RemoteFeedLoaderTests : XCTestCase {
     func test_Load_deliversErrorOnClientError () {
         
         let (SUT,Client) = makeSUTAndClient()
-        expect(SUT, toCompleteWith:.failure(.Connectivity)) {
+        expect(SUT, toCompleteWith:.failure(RemoteFeedLoader.Error.Connectivity)) {
             let  ClientError = NSError(domain: "TestError", code: 0)
             Client.complete(with: ClientError)
         }
@@ -53,7 +53,7 @@ class RemoteFeedLoaderTests : XCTestCase {
         let samples = [199,299,399,400,500]
         samples.enumerated().forEach { index, value in
             
-            expect(SUT, toCompleteWith: .failure(.invalidData)) {
+            expect(SUT, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData)) {
                 let jsondata = makeItemsJSON([])
                 Client.complete(withStatusCode: value, data: jsondata, at: index)
             }}
@@ -63,7 +63,7 @@ class RemoteFeedLoaderTests : XCTestCase {
     func test_Load_deliversErrorOnNon200HTTPResponseWithInvalidJSON (){
         
         let (SUT,Client) = makeSUTAndClient()
-        expect(SUT, toCompleteWith: .failure(.invalidData), when: {
+        expect(SUT, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
             
             let invalidJson = Data("Invalid JSON".utf8)
             
@@ -161,8 +161,8 @@ class RemoteFeedLoaderTests : XCTestCase {
             case let (.success(receivedItems),.success(expectedItems)):
                 XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
                 
-            case let (.failure(receviedError),.failure(expectedError)):
-                XCTAssertEqual(receviedError, expectedError, file: file, line: line)
+            case let (.failure(receviedError as RemoteFeedLoader.Error),.failure(expectedError as RemoteFeedLoader.Error)):
+                XCTAssertEqual(receviedError , expectedError , file: file, line: line)
             default : XCTFail("expected result \(expectedresult) didn't match \(recievedResult)",file: file,line: line)
             }
             exp.fulfill()
