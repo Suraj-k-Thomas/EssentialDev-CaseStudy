@@ -15,6 +15,6 @@ public enum LoadFeedResult {
 
 
 // protocol feedloader
-protocol FeedLoader {
+public protocol FeedLoader {
     func loadFeed(completion:@escaping(LoadFeedResult)->Void)
 }
