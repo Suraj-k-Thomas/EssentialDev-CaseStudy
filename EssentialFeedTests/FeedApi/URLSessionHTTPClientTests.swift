@@ -18,7 +18,7 @@ class URLSessionHTTPClient  {
     }
     
     func get(from url : URL){
-        session.dataTask(with: url) { _, _, _ in}
+        session.dataTask(with: url) { _, _, _ in}.resume()
     }
 }
 class URLSessionHTTPClientTests :XCTestCase{
@@ -32,16 +32,45 @@ class URLSessionHTTPClientTests :XCTestCase{
         XCTAssertEqual(session.recievedUrls, [url])
     }
     
-    class URLSessionSpy : URLSession {
+    func test_getFromURL_resumesDataTaskWithURL () {
+        
+        let session = URLSessionSpy()
+        let url = URL(string: "https://a-url.com")!
+        let sut = URLSessionHTTPClient(session: session)
+        let task = URLSessionDataTaskSpy()
+        session.stub(url: url, dataTask: task)
+        sut.get(from: url)
+        XCTAssertEqual(task.resumeCallCount,1)
+    }
+    
+    //Helpers
+    
+    private class URLSessionSpy : URLSession {
         var recievedUrls = [URL]()
+        private var  stubs = [URL:URLSessionDataTask]()
+        
+       func stub(url: URL, dataTask: URLSessionDataTaskSpy) {
+           stubs[url] = dataTask
+        }
         
         override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
             recievedUrls.append(url)
-            return fakeURLSessionDataTask ()
+            return stubs[url] ?? fakeURLSessionDataTask ()
         }
+        
         
     }
     
-    private class fakeURLSessionDataTask : URLSessionDataTask {}
+    private class fakeURLSessionDataTask : URLSessionDataTask {
+        override func resume() {}
+    }
+    private class URLSessionDataTaskSpy : URLSessionDataTask {
+        
+        var resumeCallCount = 0
+        
+        override func resume() {
+            resumeCallCount += 1
+        }
+    }
 
 }
